@@ -13,7 +13,9 @@ module MonteCarlo=
         let getZ()=
             distributions |> Seq.map(fun d -> d.Generate())
         let mu2 = (mu.ToRowMatrix()*mu.ToColumnMatrix()*0.5)
+        let LossD = new System.Collections.Generic.List<double*double>()
         let mutable acc = 0.0
+        let lrs = new System.Collections.Generic.List<double>()
         for n in 0 .. nsim-1 do
             let Z = Vector.Build.DenseOfArray (getZ()|> Array.ofSeq)
             let X = [0 .. A.RowCount-1] |> Seq.map(fun i->
@@ -24,18 +26,18 @@ module MonteCarlo=
                                          |> Array.ofSeq
             
 
-
+            let lr = -mu.ToRowMatrix()*Z.ToColumnMatrix()+ mu2
+            let elr = Math.Exp(lr.[0,0])
+            lrs.Add(elr)
             let L = X 
                     |> Array.mapi(fun i x -> if x > barriers.[i] then ck.[i] else 0.0)
                     |> Array.sum
             
-            if L > x then
-                let lr = -mu.ToRowMatrix()*Z.ToColumnMatrix()+ mu2
-                let elr = Math.Exp(lr.[0,0])
+            if L > x then            
                 acc <- acc + elr
-            
+            LossD.Add((L,elr))
         
-        acc/float(nsim)
+        acc/float(nsim), LossD |> Seq.sortBy(fun (a,b)->a) |> Seq.mapi(fun  i (lss,lr) -> i,lss, lr)
 
     
     let RunSimple(x:float,A:Matrix<float>,nsim:int,pk:float array,ck:float array)=       
@@ -68,5 +70,5 @@ module MonteCarlo=
             
             LossD.Add(L)
         
-        acc/float(nsim), LossD |> Seq.sort |> Seq.mapi(fun i l -> l, float(i)/float(nsim))
+        acc/float(nsim), LossD |> Seq.sort |> Seq.mapi(fun i l -> l, float(i)/float(nsim-1))
 
