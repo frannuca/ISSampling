@@ -72,3 +72,25 @@ module MonteCarlo=
         
         acc/float(nsim), LossD |> Seq.sort |> Seq.mapi(fun i l -> l, float(i)/float(nsim-1))
 
+    let computeQuantileOnIS(simulationpaths:(double*double) array,tol:double)(q:double)=
+            let Nsims = float(simulationpaths.Length)
+            let computeProb(x:double)=
+                (simulationpaths 
+                |> Seq.filter(fun (l,lr) -> l >= x)
+                |> Seq.sumBy(fun (l,lr) -> lr))/Nsims
+            
+            let rec bisection(lo,hi)=
+                let mid = (lo+hi)*0.5
+                let plo = 1.0-computeProb(lo)
+                let phi = 1.0-computeProb(hi)
+                let pmid = 1.0-computeProb(mid)
+                if Math.Abs(pmid-q)<tol then  mid                
+                else if Math.Abs(plo-pmid)<tol then lo
+                else if pmid < q then bisection(mid,hi)                
+                else  bisection(lo,mid)
+                
+
+            let mutable lo,_ = simulationpaths.[0]
+            let mutable hi,_ =  simulationpaths.[int(Nsims)-1]
+            bisection(lo,hi)            
+

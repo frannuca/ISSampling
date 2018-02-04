@@ -37,6 +37,8 @@ let main argv =
     framec.SaveCsv("E:/SmpleChart_B.csv")
     framecIS.SaveCsv("E:/ISChart_B.csv")
 
+    let q = MonteCarlo.computeQuantileOnIS(Loss_IS |> Seq.map(fun (i,a,b) -> a,b)|> Array.ofSeq,1e-5)(0.9997)
+
     //let curve = [0 .. 10] |> Seq.map(fun i ->
     //                                            let loss = L+(float(Lmax) - L)*float(i)/200.0
     //                                            let P_is_lr_L = MonteCarlo.Run(loss,Ak,mu,nsims,Pk.ToArray(),Ck.ToArray())
