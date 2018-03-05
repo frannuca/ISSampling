@@ -68,6 +68,9 @@
     <Reference Include="FSharp.Data">
       <HintPath>..\packages\FSharp.Data.2.4.5\lib\net45\FSharp.Data.dll</HintPath>
     </Reference>
+    <Reference Include="GAF.461">
+      <HintPath>..\packages\GAF.2.3.1\lib\net461\GAF.461.dll</HintPath>
+    </Reference>
     <Reference Include="Google.DataTable.Net.Wrapper">
       <HintPath>..\packages\Google.DataTable.Net.Wrapper.3.1.2.0\lib\Google.DataTable.Net.Wrapper.dll</HintPath>
     </Reference>
@@ -94,6 +97,7 @@
       <HintPath>..\packages\System.ValueTuple.4.3.1\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="XPlot.GoogleCharts">
       <HintPath>..\packages\XPlot.GoogleCharts.1.4.5\lib\net45\XPlot.GoogleCharts.dll</HintPath>
